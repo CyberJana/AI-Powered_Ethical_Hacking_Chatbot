@@ -1,5 +1,6 @@
 """Environment-backed application configuration."""
 
+import os
 from functools import lru_cache
 from pathlib import Path
 
@@ -14,7 +15,11 @@ class Settings(BaseSettings):
 
     app_name: str = "AI-Powered Ethical Hacking Chatbot"
     environment: str = "development"
-    database_url: str = "sqlite:///./data/ethical_hacking.db"
+    database_url: str = (
+        "sqlite:////tmp/ethical_hacking.db"
+        if os.getenv("VERCEL")
+        else "sqlite:///./data/ethical_hacking.db"
+    )
     max_upload_size_bytes: int = Field(default=10 * 1024 * 1024, ge=1)
     allowed_upload_extensions: tuple[str, ...] = (
         "txt",
